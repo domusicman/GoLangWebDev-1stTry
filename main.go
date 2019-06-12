@@ -28,6 +28,7 @@ func init() {
 
 func main() {
 	http.HandleFunc("/", index)
+	http.HandleFunc("/favicon.ico", faviconHandler)
 	// http.HandleFunc("/bar", bar)
 	http.ListenAndServe(":8080", nil)
 }
@@ -42,4 +43,8 @@ func index(w http.ResponseWriter, r *http.Request) {
 	}
 	http.SetCookie(w, &c)
 
+}
+
+func faviconHandler(w http.ResponseWriter, r *http.Request) {
+	http.ServeFile(w, r, "images/watchfavicon.ico")
 }
