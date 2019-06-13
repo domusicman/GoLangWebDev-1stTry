@@ -19,9 +19,9 @@ type user struct {
 //Establish template var
 var tpl *template.Template
 
-var dbUser map[string]user
+var dbUser = map[string]user{}
 
-// var dbSession map[string]string
+var dbSession = map[string]string{}
 
 //parse all templates in templates dir and return error if can't
 func init() {
@@ -30,14 +30,13 @@ func init() {
 
 func main() {
 	http.HandleFunc("/", index)
-	http.HandleFunc("/favicon.ico", faviconHandler)
+	http.HandleFunc("/favicon.ico", faviconhandler)
 	// http.HandleFunc("/bar", bar)
 	http.ListenAndServe(":8080", nil)
 
 }
 
 func index(w http.ResponseWriter, r *http.Request) {
-	tpl.ExecuteTemplate(w, "index.gohtml", nil)
 	sID, _ := uuid.NewV4()
 	fmt.Printf("we got here")
 
@@ -47,8 +46,15 @@ func index(w http.ResponseWriter, r *http.Request) {
 	}
 	http.SetCookie(w, &c)
 
+	var u user
+	if r.Method == http.MethodPost {
+		un := r.FormValue("username")
+		u = user{un}
+	}
+	tpl.ExecuteTemplate(w, "index.gohtml", u)
+
 }
 
-func faviconHandler(w http.ResponseWriter, r *http.Request) {
+func faviconhandler(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, "images/watchfavicon.ico")
 }

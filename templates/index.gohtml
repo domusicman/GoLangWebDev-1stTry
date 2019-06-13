@@ -2,17 +2,21 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>index</title>
+    <title>Document</title>
 </head>
 <body>
-    <h1>This is the Title</h1>
 
-    <form method="POST">
-    <input type="text" name: "username" placeholder: "Username">
-    <input type="submit" value="Submit">
-    
-    
+<form method="post">
 
+    <input type="string" name="username" placeholder="username"><br>
+    <input type="submit">
+
+</form>
+
+
+{{if .UserName}}
+USER NAME {{.UserName}}<br>
+{{end}}
 
 </body>
 </html>
