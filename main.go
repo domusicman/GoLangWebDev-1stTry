@@ -9,10 +9,10 @@ import (
 )
 
 type user struct {
-	UserName string
-	// 	Password  string
-	// 	FirstName string
-	// 	LastName  string
+	UserName  string
+	Password  string
+	FirstName string
+	LastName  string
 	// 	Role      string
 }
 
@@ -28,6 +28,7 @@ func init() {
 	tpl = template.Must(template.ParseGlob("templates/*"))
 }
 
+//handle functions and map to path in url
 func main() {
 	http.HandleFunc("/", index)
 	http.HandleFunc("/favicon.ico", faviconhandler)
@@ -36,6 +37,7 @@ func main() {
 
 }
 
+//first page assign cookie and handle form data
 func index(w http.ResponseWriter, r *http.Request) {
 	sID, _ := uuid.NewV4()
 	fmt.Printf("we got here")
@@ -46,10 +48,14 @@ func index(w http.ResponseWriter, r *http.Request) {
 	}
 	http.SetCookie(w, &c)
 
+	//handle form
 	var u user
 	if r.Method == http.MethodPost {
 		un := r.FormValue("username")
-		u = user{un}
+		p := r.FormValue("password")
+		f := r.FormValue("firstname")
+		l := r.FormValue("lastname")
+		u = user{un, p, f, l}
 	}
 	tpl.ExecuteTemplate(w, "index.gohtml", u)
 

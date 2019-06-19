@@ -8,14 +8,22 @@
 
 <form method="post">
 
-    <input type="string" name="username" placeholder="username"><br>
+    <input type="email" name="username" placeholder="email"><br>
+    <input type="text" name="password" placeholder="password"><br>
+    <input type="text" name="firstname" placeholder="first name"><br>
+    <input type="text" name="lastname" placeholder="last name"><br>
+
     <input type="submit">
 
 </form>
 
 
-{{if .UserName}}
-USER NAME {{.UserName}}<br>
+{{if .FirstName}}
+    USERNAME: {{.UserName}}<br>
+    PASSWORD: {{.Password}}<br>
+    FIRST NAME: {{.FirstName}}<br>
+    LAST NAME: {{.LastName}}<br>
+
 {{end}}
 
 </body>
