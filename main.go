@@ -32,7 +32,7 @@ func init() {
 func main() {
 	http.HandleFunc("/", index)
 	http.HandleFunc("/favicon.ico", faviconhandler)
-	// http.HandleFunc("/bar", bar)
+	http.HandleFunc("/bar", bar)
 	http.ListenAndServe(":8080", nil)
 
 }
@@ -63,4 +63,8 @@ func index(w http.ResponseWriter, r *http.Request) {
 
 func faviconhandler(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, "images/watchfavicon.ico")
+}
+
+func bar(w http.ResponseWriter, r *http.Request) {
+	tpl.ExecuteTemplate(w, "bar.gohtml", nil)
 }
