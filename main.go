@@ -46,16 +46,25 @@ func index(w http.ResponseWriter, r *http.Request) {
 		Name:  "session",
 		Value: sID.String(),
 	}
+	fmt.Printf(c.Value)
 	http.SetCookie(w, &c)
 
-	//handle form
+	//check to see if user exists and get them
 	var u user
+	if un, ok := dbSession[c.Value]; ok {
+		u = dbUser[un]
+	}
+
+	//handle form
 	if r.Method == http.MethodPost {
 		un := r.FormValue("username")
 		p := r.FormValue("password")
 		f := r.FormValue("firstname")
 		l := r.FormValue("lastname")
 		u = user{un, p, f, l}
+		dbSession[c.Value] = un
+		dbUser[un] = u
+
 	}
 	tpl.ExecuteTemplate(w, "index.gohtml", u)
 
@@ -66,5 +75,37 @@ func faviconhandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func bar(w http.ResponseWriter, r *http.Request) {
-	tpl.ExecuteTemplate(w, "bar.gohtml", nil)
+	if !alreadyLoggedIn(r) {
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+		return
+
+	}
+	c, err := r.Cookie("session")
+	if err != nil {
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+	}
+
+	un, ok := dbSession[c.Value]
+	if !ok {
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+	}
+	u := dbUser[un]
+	tpl.ExecuteTemplate(w, "bar.gohtml", u)
 }
+
+func alreadyLoggedIn(r *http.Request) bool {
+	c, err := r.Cookie("session")
+	if err != nil {
+		return false
+	}
+	un := dbSession[c.Value]
+	_, ok := dbUser[un]
+	return ok
+}
+
+// check if c.cookie matches uname?
+// get cookie
+
+// if it doesn't match redirect back to index
+
+//if it does match allow through
