@@ -32,8 +32,20 @@ func init() {
 func main() {
 	http.HandleFunc("/", index)
 	http.HandleFunc("/favicon.ico", faviconhandler)
+	http.HandleFunc("/login", login)
+	http.HandleFunc("/signup", signup)
 	http.HandleFunc("/bar", bar)
 	http.ListenAndServe(":8080", nil)
+
+}
+
+//create login page
+func login(w http.ResponseWriter, r *http.Request) {
+	un := r.FormValue("username")
+	p := r.FormValue("password")
+	dbSession[c."Value"] = un
+
+	tpl.ExecuteTemplate(w, "login", nil)
 
 }
 
@@ -92,20 +104,3 @@ func bar(w http.ResponseWriter, r *http.Request) {
 	u := dbUser[un]
 	tpl.ExecuteTemplate(w, "bar.gohtml", u)
 }
-
-func alreadyLoggedIn(r *http.Request) bool {
-	c, err := r.Cookie("session")
-	if err != nil {
-		return false
-	}
-	un := dbSession[c.Value]
-	_, ok := dbUser[un]
-	return ok
-}
-
-// check if c.cookie matches uname?
-// get cookie
-
-// if it doesn't match redirect back to index
-
-//if it does match allow through
